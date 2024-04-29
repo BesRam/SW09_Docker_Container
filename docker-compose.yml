@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  joomla-mysql:
+    image: mysql:8.3.0
+    container_name: joomla-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mypassword
+      MYSQL_DATABASE: joomladb
+      MYSQL_USER: joomlauser
+      MYSQL_PASSWORD: joomlapass
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  joomla-web:
+    image: joomla:4.4.4
+    container_name: joomla-web
+    depends_on:
+      - joomla-mysql
+    environment:
+      JOOMLA_DB_HOST: joomla-mysql
+      JOOMLA_DB_USER: joomlauser
+      JOOMLA_DB_PASSWORD: joomlapass
+      JOOMLA_DB_NAME: joomladb
+    ports:
+      - "8080:80"
+
+volumes:
+  mysql_data:
